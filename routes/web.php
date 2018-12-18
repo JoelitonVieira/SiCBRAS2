@@ -1,0 +1,168 @@
+<?php
+Route::get('/', function () { return redirect('/admin/home'); });
+
+// Authentication Routes...
+$this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+$this->post('login', 'Auth\LoginController@login')->name('auth.login');
+$this->post('logout', 'Auth\LoginController@logout')->name('auth.logout');
+
+// Change Password Routes...
+$this->get('change_password', 'Auth\ChangePasswordController@showChangePasswordForm')->name('auth.change_password');
+$this->patch('change_password', 'Auth\ChangePasswordController@changePassword')->name('auth.change_password');
+
+// Password Reset Routes...
+$this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('auth.password.reset');
+$this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('auth.password.reset');
+$this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+$this->post('password/reset', 'Auth\ResetPasswordController@reset')->name('auth.password.reset');
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('/home', 'HomeController@index');
+    
+    Route::resource('roles', 'Admin\RolesController');
+    Route::post('roles_mass_destroy', ['uses' => 'Admin\RolesController@massDestroy', 'as' => 'roles.mass_destroy']);
+    Route::resource('users', 'Admin\UsersController');
+    Route::post('users_mass_destroy', ['uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy']);
+    Route::resource('user_actions', 'Admin\UserActionsController');
+    Route::resource('treinamentos', 'Admin\TreinamentosController');
+    Route::post('treinamentos_mass_destroy', ['uses' => 'Admin\TreinamentosController@massDestroy', 'as' => 'treinamentos.mass_destroy']);
+    Route::post('treinamentos_restore/{id}', ['uses' => 'Admin\TreinamentosController@restore', 'as' => 'treinamentos.restore']);
+    Route::delete('treinamentos_perma_del/{id}', ['uses' => 'Admin\TreinamentosController@perma_del', 'as' => 'treinamentos.perma_del']);
+    Route::resource('cargos', 'Admin\CargosController');
+    Route::post('cargos_mass_destroy', ['uses' => 'Admin\CargosController@massDestroy', 'as' => 'cargos.mass_destroy']);
+    Route::post('cargos_restore/{id}', ['uses' => 'Admin\CargosController@restore', 'as' => 'cargos.restore']);
+    Route::delete('cargos_perma_del/{id}', ['uses' => 'Admin\CargosController@perma_del', 'as' => 'cargos.perma_del']);
+    Route::resource('setores', 'Admin\SetoresController');
+    Route::post('setores_mass_destroy', ['uses' => 'Admin\SetoresController@massDestroy', 'as' => 'setores.mass_destroy']);
+    Route::post('setores_restore/{id}', ['uses' => 'Admin\SetoresController@restore', 'as' => 'setores.restore']);
+    Route::delete('setores_perma_del/{id}', ['uses' => 'Admin\SetoresController@perma_del', 'as' => 'setores.perma_del']);
+    Route::resource('funcionarios', 'Admin\FuncionariosController');
+    Route::post('funcionarios_mass_destroy', ['uses' => 'Admin\FuncionariosController@massDestroy', 'as' => 'funcionarios.mass_destroy']);
+    Route::post('funcionarios_restore/{id}', ['uses' => 'Admin\FuncionariosController@restore', 'as' => 'funcionarios.restore']);
+    Route::delete('funcionarios_perma_del/{id}', ['uses' => 'Admin\FuncionariosController@perma_del', 'as' => 'funcionarios.perma_del']);
+    Route::resource('turmas', 'Admin\TurmasController');
+    Route::post('turmas_mass_destroy', ['uses' => 'Admin\TurmasController@massDestroy', 'as' => 'turmas.mass_destroy']);
+    Route::post('turmas_restore/{id}', ['uses' => 'Admin\TurmasController@restore', 'as' => 'turmas.restore']);
+    Route::delete('turmas_perma_del/{id}', ['uses' => 'Admin\TurmasController@perma_del', 'as' => 'turmas.perma_del']);
+    Route::resource('departamentos', 'Admin\DepartamentosController');
+    Route::post('departamentos_mass_destroy', ['uses' => 'Admin\DepartamentosController@massDestroy', 'as' => 'departamentos.mass_destroy']);
+    Route::post('departamentos_restore/{id}', ['uses' => 'Admin\DepartamentosController@restore', 'as' => 'departamentos.restore']);
+    Route::delete('departamentos_perma_del/{id}', ['uses' => 'Admin\DepartamentosController@perma_del', 'as' => 'departamentos.perma_del']);
+    Route::resource('tipo_de_treinamentos', 'Admin\TipoDeTreinamentosController');
+    Route::post('tipo_de_treinamentos_mass_destroy', ['uses' => 'Admin\TipoDeTreinamentosController@massDestroy', 'as' => 'tipo_de_treinamentos.mass_destroy']);
+    Route::post('tipo_de_treinamentos_restore/{id}', ['uses' => 'Admin\TipoDeTreinamentosController@restore', 'as' => 'tipo_de_treinamentos.restore']);
+    Route::delete('tipo_de_treinamentos_perma_del/{id}', ['uses' => 'Admin\TipoDeTreinamentosController@perma_del', 'as' => 'tipo_de_treinamentos.perma_del']);
+    Route::resource('espec_treinamentos', 'Admin\EspecTreinamentosController');
+    Route::post('espec_treinamentos_mass_destroy', ['uses' => 'Admin\EspecTreinamentosController@massDestroy', 'as' => 'espec_treinamentos.mass_destroy']);
+    Route::post('espec_treinamentos_restore/{id}', ['uses' => 'Admin\EspecTreinamentosController@restore', 'as' => 'espec_treinamentos.restore']);
+    Route::delete('espec_treinamentos_perma_del/{id}', ['uses' => 'Admin\EspecTreinamentosController@perma_del', 'as' => 'espec_treinamentos.perma_del']);
+    Route::resource('arquivos', 'Admin\ArquivosController');
+    Route::post('arquivos_mass_destroy', ['uses' => 'Admin\ArquivosController@massDestroy', 'as' => 'arquivos.mass_destroy']);
+    Route::post('arquivos_restore/{id}', ['uses' => 'Admin\ArquivosController@restore', 'as' => 'arquivos.restore']);
+    Route::delete('arquivos_perma_del/{id}', ['uses' => 'Admin\ArquivosController@perma_del', 'as' => 'arquivos.perma_del']);
+    Route::resource('questões', 'Admin\QuestõesController');
+    Route::resource('materia_primas', 'Admin\MateriaPrimasController');
+    Route::post('materia_primas_mass_destroy', ['uses' => 'Admin\MateriaPrimasController@massDestroy', 'as' => 'materia_primas.mass_destroy']);
+    Route::post('materia_primas_restore/{id}', ['uses' => 'Admin\MateriaPrimasController@restore', 'as' => 'materia_primas.restore']);
+    Route::delete('materia_primas_perma_del/{id}', ['uses' => 'Admin\MateriaPrimasController@perma_del', 'as' => 'materia_primas.perma_del']);
+    Route::resource('fornecedors', 'Admin\FornecedorsController');
+    Route::post('fornecedors_mass_destroy', ['uses' => 'Admin\FornecedorsController@massDestroy', 'as' => 'fornecedors.mass_destroy']);
+    Route::post('fornecedors_restore/{id}', ['uses' => 'Admin\FornecedorsController@restore', 'as' => 'fornecedors.restore']);
+    Route::delete('fornecedors_perma_del/{id}', ['uses' => 'Admin\FornecedorsController@perma_del', 'as' => 'fornecedors.perma_del']);
+    Route::resource('areias', 'Admin\AreiasController');
+    Route::post('areias_mass_destroy', ['uses' => 'Admin\AreiasController@massDestroy', 'as' => 'areias.mass_destroy']);
+    Route::post('areias_restore/{id}', ['uses' => 'Admin\AreiasController@restore', 'as' => 'areias.restore']);
+    Route::delete('areias_perma_del/{id}', ['uses' => 'Admin\AreiasController@perma_del', 'as' => 'areias.perma_del']);
+    Route::resource('coques', 'Admin\CoquesController');
+    Route::post('coques_mass_destroy', ['uses' => 'Admin\CoquesController@massDestroy', 'as' => 'coques.mass_destroy']);
+    Route::post('coques_restore/{id}', ['uses' => 'Admin\CoquesController@restore', 'as' => 'coques.restore']);
+    Route::delete('coques_perma_del/{id}', ['uses' => 'Admin\CoquesController@perma_del', 'as' => 'coques.perma_del']);
+    Route::resource('grafites', 'Admin\GrafitesController');
+    Route::post('grafites_mass_destroy', ['uses' => 'Admin\GrafitesController@massDestroy', 'as' => 'grafites.mass_destroy']);
+    Route::post('grafites_restore/{id}', ['uses' => 'Admin\GrafitesController@restore', 'as' => 'grafites.restore']);
+    Route::delete('grafites_perma_del/{id}', ['uses' => 'Admin\GrafitesController@perma_del', 'as' => 'grafites.perma_del']);
+    Route::resource('pasta_a_frio_ou_briquetes', 'Admin\PastaAFrioOuBriquetesController');
+    Route::post('pasta_a_frio_ou_briquetes_mass_destroy', ['uses' => 'Admin\PastaAFrioOuBriquetesController@massDestroy', 'as' => 'pasta_a_frio_ou_briquetes.mass_destroy']);
+    Route::post('pasta_a_frio_ou_briquetes_restore/{id}', ['uses' => 'Admin\PastaAFrioOuBriquetesController@restore', 'as' => 'pasta_a_frio_ou_briquetes.restore']);
+    Route::delete('pasta_a_frio_ou_briquetes_perma_del/{id}', ['uses' => 'Admin\PastaAFrioOuBriquetesController@perma_del', 'as' => 'pasta_a_frio_ou_briquetes.perma_del']);
+    Route::resource('areia_saidas', 'Admin\AreiaSaidasController');
+    Route::post('areia_saidas_mass_destroy', ['uses' => 'Admin\AreiaSaidasController@massDestroy', 'as' => 'areia_saidas.mass_destroy']);
+    Route::post('areia_saidas_restore/{id}', ['uses' => 'Admin\AreiaSaidasController@restore', 'as' => 'areia_saidas.restore']);
+    Route::delete('areia_saidas_perma_del/{id}', ['uses' => 'Admin\AreiaSaidasController@perma_del', 'as' => 'areia_saidas.perma_del']);
+    Route::resource('coque_saidas', 'Admin\CoqueSaidasController');
+    Route::post('coque_saidas_mass_destroy', ['uses' => 'Admin\CoqueSaidasController@massDestroy', 'as' => 'coque_saidas.mass_destroy']);
+    Route::post('coque_saidas_restore/{id}', ['uses' => 'Admin\CoqueSaidasController@restore', 'as' => 'coque_saidas.restore']);
+    Route::delete('coque_saidas_perma_del/{id}', ['uses' => 'Admin\CoqueSaidasController@perma_del', 'as' => 'coque_saidas.perma_del']);
+    Route::resource('grafite_saidas', 'Admin\GrafiteSaidasController');
+    Route::post('grafite_saidas_mass_destroy', ['uses' => 'Admin\GrafiteSaidasController@massDestroy', 'as' => 'grafite_saidas.mass_destroy']);
+    Route::post('grafite_saidas_restore/{id}', ['uses' => 'Admin\GrafiteSaidasController@restore', 'as' => 'grafite_saidas.restore']);
+    Route::delete('grafite_saidas_perma_del/{id}', ['uses' => 'Admin\GrafiteSaidasController@perma_del', 'as' => 'grafite_saidas.perma_del']);
+    Route::resource('pasta_a_frio_e_briquete_saidas', 'Admin\PastaAFrioEBriqueteSaidasController');
+    Route::post('pasta_a_frio_e_briquete_saidas_mass_destroy', ['uses' => 'Admin\PastaAFrioEBriqueteSaidasController@massDestroy', 'as' => 'pasta_a_frio_e_briquete_saidas.mass_destroy']);
+    Route::post('pasta_a_frio_e_briquete_saidas_restore/{id}', ['uses' => 'Admin\PastaAFrioEBriqueteSaidasController@restore', 'as' => 'pasta_a_frio_e_briquete_saidas.restore']);
+    Route::delete('pasta_a_frio_e_briquete_saidas_perma_del/{id}', ['uses' => 'Admin\PastaAFrioEBriqueteSaidasController@perma_del', 'as' => 'pasta_a_frio_e_briquete_saidas.perma_del']);
+    Route::resource('mistura_novas', 'Admin\MisturaNovasController');
+    Route::post('mistura_novas_mass_destroy', ['uses' => 'Admin\MisturaNovasController@massDestroy', 'as' => 'mistura_novas.mass_destroy']);
+    Route::post('mistura_novas_restore/{id}', ['uses' => 'Admin\MisturaNovasController@restore', 'as' => 'mistura_novas.restore']);
+    Route::delete('mistura_novas_perma_del/{id}', ['uses' => 'Admin\MisturaNovasController@perma_del', 'as' => 'mistura_novas.perma_del']);
+    Route::resource('solicitacao_de_analises', 'Admin\SolicitacaoDeAnalisesController');
+    Route::post('solicitacao_de_analises_mass_destroy', ['uses' => 'Admin\SolicitacaoDeAnalisesController@massDestroy', 'as' => 'solicitacao_de_analises.mass_destroy']);
+    Route::post('solicitacao_de_analises_restore/{id}', ['uses' => 'Admin\SolicitacaoDeAnalisesController@restore', 'as' => 'solicitacao_de_analises.restore']);
+    Route::delete('solicitacao_de_analises_perma_del/{id}', ['uses' => 'Admin\SolicitacaoDeAnalisesController@perma_del', 'as' => 'solicitacao_de_analises.perma_del']);
+    Route::resource('clientes', 'Admin\ClientesController');
+    Route::post('clientes_mass_destroy', ['uses' => 'Admin\ClientesController@massDestroy', 'as' => 'clientes.mass_destroy']);
+    Route::post('clientes_restore/{id}', ['uses' => 'Admin\ClientesController@restore', 'as' => 'clientes.restore']);
+    Route::delete('clientes_perma_del/{id}', ['uses' => 'Admin\ClientesController@perma_del', 'as' => 'clientes.perma_del']);
+    Route::resource('produtos', 'Admin\ProdutosController');
+    Route::post('produtos_mass_destroy', ['uses' => 'Admin\ProdutosController@massDestroy', 'as' => 'produtos.mass_destroy']);
+    Route::post('produtos_restore/{id}', ['uses' => 'Admin\ProdutosController@restore', 'as' => 'produtos.restore']);
+    Route::delete('produtos_perma_del/{id}', ['uses' => 'Admin\ProdutosController@perma_del', 'as' => 'produtos.perma_del']);
+    Route::resource('contatos', 'Admin\ContatosController');
+    Route::post('contatos_mass_destroy', ['uses' => 'Admin\ContatosController@massDestroy', 'as' => 'contatos.mass_destroy']);
+    Route::post('contatos_restore/{id}', ['uses' => 'Admin\ContatosController@restore', 'as' => 'contatos.restore']);
+    Route::delete('contatos_perma_del/{id}', ['uses' => 'Admin\ContatosController@perma_del', 'as' => 'contatos.perma_del']);
+    Route::resource('especificacaos', 'Admin\EspecificacaosController');
+    Route::post('especificacaos_mass_destroy', ['uses' => 'Admin\EspecificacaosController@massDestroy', 'as' => 'especificacaos.mass_destroy']);
+    Route::post('especificacaos_restore/{id}', ['uses' => 'Admin\EspecificacaosController@restore', 'as' => 'especificacaos.restore']);
+    Route::delete('especificacaos_perma_del/{id}', ['uses' => 'Admin\EspecificacaosController@perma_del', 'as' => 'especificacaos.perma_del']);
+    Route::resource('solicitar_amostras', 'Admin\SolicitarAmostrasController');
+    Route::post('solicitar_amostras_mass_destroy', ['uses' => 'Admin\SolicitarAmostrasController@massDestroy', 'as' => 'solicitar_amostras.mass_destroy']);
+    Route::post('solicitar_amostras_restore/{id}', ['uses' => 'Admin\SolicitarAmostrasController@restore', 'as' => 'solicitar_amostras.restore']);
+    Route::delete('solicitar_amostras_perma_del/{id}', ['uses' => 'Admin\SolicitarAmostrasController@perma_del', 'as' => 'solicitar_amostras.perma_del']);
+    Route::resource('composicao_fisicas', 'Admin\ComposicaoFisicasController');
+    Route::post('composicao_fisicas_mass_destroy', ['uses' => 'Admin\ComposicaoFisicasController@massDestroy', 'as' => 'composicao_fisicas.mass_destroy']);
+    Route::post('composicao_fisicas_restore/{id}', ['uses' => 'Admin\ComposicaoFisicasController@restore', 'as' => 'composicao_fisicas.restore']);
+    Route::delete('composicao_fisicas_perma_del/{id}', ['uses' => 'Admin\ComposicaoFisicasController@perma_del', 'as' => 'composicao_fisicas.perma_del']);
+    Route::resource('composicao_granulometricas', 'Admin\ComposicaoGranulometricasController');
+    Route::post('composicao_granulometricas_mass_destroy', ['uses' => 'Admin\ComposicaoGranulometricasController@massDestroy', 'as' => 'composicao_granulometricas.mass_destroy']);
+    Route::post('composicao_granulometricas_restore/{id}', ['uses' => 'Admin\ComposicaoGranulometricasController@restore', 'as' => 'composicao_granulometricas.restore']);
+    Route::delete('composicao_granulometricas_perma_del/{id}', ['uses' => 'Admin\ComposicaoGranulometricasController@perma_del', 'as' => 'composicao_granulometricas.perma_del']);
+    Route::resource('analise_granulometricas', 'Admin\AnaliseGranulometricasController');
+    Route::post('analise_granulometricas_mass_destroy', ['uses' => 'Admin\AnaliseGranulometricasController@massDestroy', 'as' => 'analise_granulometricas.mass_destroy']);
+    Route::post('analise_granulometricas_restore/{id}', ['uses' => 'Admin\AnaliseGranulometricasController@restore', 'as' => 'analise_granulometricas.restore']);
+    Route::delete('analise_granulometricas_perma_del/{id}', ['uses' => 'Admin\AnaliseGranulometricasController@perma_del', 'as' => 'analise_granulometricas.perma_del']);
+    Route::resource('resultados_fisicos', 'Admin\ResultadosFisicosController');
+    Route::post('resultados_fisicos_mass_destroy', ['uses' => 'Admin\ResultadosFisicosController@massDestroy', 'as' => 'resultados_fisicos.mass_destroy']);
+    Route::post('resultados_fisicos_restore/{id}', ['uses' => 'Admin\ResultadosFisicosController@restore', 'as' => 'resultados_fisicos.restore']);
+    Route::delete('resultados_fisicos_perma_del/{id}', ['uses' => 'Admin\ResultadosFisicosController@perma_del', 'as' => 'resultados_fisicos.perma_del']);
+    Route::resource('composicao_quimicas', 'Admin\ComposicaoQuimicasController');
+    Route::post('composicao_quimicas_mass_destroy', ['uses' => 'Admin\ComposicaoQuimicasController@massDestroy', 'as' => 'composicao_quimicas.mass_destroy']);
+    Route::post('composicao_quimicas_restore/{id}', ['uses' => 'Admin\ComposicaoQuimicasController@restore', 'as' => 'composicao_quimicas.restore']);
+    Route::delete('composicao_quimicas_perma_del/{id}', ['uses' => 'Admin\ComposicaoQuimicasController@perma_del', 'as' => 'composicao_quimicas.perma_del']);
+    Route::resource('analise_quimicas', 'Admin\AnaliseQuimicasController');
+    Route::post('analise_quimicas_mass_destroy', ['uses' => 'Admin\AnaliseQuimicasController@massDestroy', 'as' => 'analise_quimicas.mass_destroy']);
+    Route::post('analise_quimicas_restore/{id}', ['uses' => 'Admin\AnaliseQuimicasController@restore', 'as' => 'analise_quimicas.restore']);
+    Route::delete('analise_quimicas_perma_del/{id}', ['uses' => 'Admin\AnaliseQuimicasController@perma_del', 'as' => 'analise_quimicas.perma_del']);
+    Route::resource('resultados_quimicos', 'Admin\ResultadosQuimicosController');
+    Route::post('resultados_quimicos_mass_destroy', ['uses' => 'Admin\ResultadosQuimicosController@massDestroy', 'as' => 'resultados_quimicos.mass_destroy']);
+    Route::post('resultados_quimicos_restore/{id}', ['uses' => 'Admin\ResultadosQuimicosController@restore', 'as' => 'resultados_quimicos.restore']);
+    Route::delete('resultados_quimicos_perma_del/{id}', ['uses' => 'Admin\ResultadosQuimicosController@perma_del', 'as' => 'resultados_quimicos.perma_del']);
+    Route::post('/spatie/media/upload', 'Admin\SpatieMediaController@create')->name('media.upload');
+    Route::post('/spatie/media/remove', 'Admin\SpatieMediaController@destroy')->name('media.remove');
+
+
+
+ 
+    Route::get('language/{lang}', function ($lang) {
+        return redirect()->back()->withCookie(cookie()->forever('language', $lang));
+    })->name('language');});
